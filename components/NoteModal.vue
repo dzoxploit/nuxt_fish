@@ -50,7 +50,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["close", "update"]);
+const emit = defineEmits(["close", "update", "fetchNotes"]);
 
 const updatedNote = ref({ ...props.note });
 
@@ -63,6 +63,7 @@ watch(
 
 const closeModal = () => {
   emit("close");
+  emit("fetchNotes"); // Emit event to fetch notes when modal is closed
 };
 
 const updateNote = async () => {
@@ -75,6 +76,7 @@ const updateNote = async () => {
       }
     );
     emit("update", response.data.data);
+    emit("fetchNotes"); // Emit event to fetch notes after updating
     closeModal();
   } catch (error) {
     console.error("Error updating note:", error);

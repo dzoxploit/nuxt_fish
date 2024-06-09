@@ -10,6 +10,9 @@
         @input="fetchNotes"
       />
     </header>
+    <!-- Slider Carousel -->
+    <SliderCarousel :slides="sliderImages" />
+    <!-- End of Slider Carousel -->
     <div
       class="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4"
     >
@@ -32,6 +35,7 @@
       :isOpen="isModalOpen"
       @close="closeModal"
       @update="handleUpdate"
+      @fetchNotes="fetchNotes"
     />
   </div>
 </template>
@@ -41,11 +45,18 @@ import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import Note from "~/components/Note.vue";
 import NoteModal from "~/components/NoteModal.vue";
+import SliderCarousel from "~/components/SliderCarousel.vue";
 
 const notes = ref([]);
 const searchQuery = ref("");
 const isModalOpen = ref(false);
 const selectedNote = ref(null);
+
+const sliderImages = ref([
+  { image: "https://via.placeholder.com/800x400?text=Slide+1" },
+  { image: "https://via.placeholder.com/800x400?text=Slide+2" },
+  { image: "https://via.placeholder.com/800x400?text=Slide+3" },
+]);
 
 const fetchNotes = async () => {
   try {
@@ -71,6 +82,7 @@ const openModal = (note) => {
 
 const closeModal = () => {
   isModalOpen.value = false;
+  fetchNotes(); // Refresh notes when modal is closed
 };
 
 const handleUpdate = async (updatedNote) => {
@@ -80,7 +92,6 @@ const handleUpdate = async (updatedNote) => {
   }
   await fetchNotes(); // Refresh the data
   closeModal(); // Close the modal
-  await fetchNotes();
 };
 
 const deleteNote = async (note) => {
